@@ -1,0 +1,7 @@
+*.dll
+TestResults
+*.suo
+*.vsmdi
+*.testsettings
+*.pdb
+obj

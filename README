@@ -1,0 +1,56 @@
+This project is a fork of The Zebra Crossing CSharp port. 
+The purpose of the project is to recognize bar codes from C# and other .NET projects.
+
+To visit the Zebro Crossing project go to http://code.google.com/p/zxing.
+The source code is available under the Apache License, Version 2.0 [http://www.apache.org/licenses/LICENSE-2.0].
+
+
+GET STARTED
+
+To get started, download the source code, and add the project to your solution.
+
+The fastest way to get a short understanding of how to use the project is to look at the tests in the zxing.Tests folder.
+
+For example you can re-use this helper method:
+
+public Result RecognizeBarCode(Bitmap bmp, ArrayList formats, Boolean pureBarCode = false, Boolean tryHarder = false)
+{
+    Reader reader = new MultiFormatReader();
+
+    var source = new RGBLuminanceSource(bmp, bmp.Width, bmp.Height);
+    Binarizer binarizer = new HybridBinarizer(source);
+    Hashtable table = new Hashtable();
+    table.Add(DecodeHintType.PURE_BARCODE, pureBarCode);
+    table.Add(DecodeHintType.TRY_HARDER, tryHarder);
+    table.Add(DecodeHintType.POSSIBLE_FORMATS, formats);
+    BinaryBitmap binBmp = new BinaryBitmap(binarizer);
+
+    Result result = reader.decode(binBmp, table);
+    return result;
+}
+
+To use the helper method for recognizing a Code128 encoded bar code, use this method:
+
+var bmp = new Bitmap("MyBarcodeImage.jpg");
+var formats = new ArrayList() { BarcodeFormat.CODE_128 };
+var result = RecognizeBarCode(bmp, formats);
+Console.WriteLine(result.Text);
+
+If you are having trouble recognizing the barcode, you can either:
+
+1. Try out different encodings by adding them to the ArrayList, e.g. new ArrayList() { BarcodeFormat.CODE_128, BarcodeFormat.CODE_39 };
+2. Enable the TryHarder flag, e.g. RecognizeBarCode(bmp, new ArrayList() { BarcodeFormat.CODE_128 }, false, true);
+
+Please note that the project currently requires you to allow unsafe code. This is not important to me,
+but I realize that it might be to others, so I'm working on removing this constraint.
+
+
+---- IMPORTANT NOTE ----
+THE CURRENT CODE IS NOT STABLE!!
+IT HAS BEEN TESTED MOSTLY FOR CODE39 AND CODE128 ENCODED BAR CODES.
+
+IF YOU RECEIVE MYSTERIOUS EXCEPTIONS, PLEASE CREATE AN ISSUE HERE ON GITHUB 
+WITH A LINK TO A DOWNLOADABLE IMAGE WITH YOUR BARCODE, 
+SO I CAN REPRODUCE THE BUG. 
+
+I will gladly help you, so that we can stabilize the code together:-)
